@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="US-ASCII">
+<title>Welcome to ping pong</title>
+<script type="text/javascript">
+function pingClient ()
+{
+  if ("WebSocket" in window)
+  {
+     alert("WebSocket is supported by your Browser!");
+     // Let us open a web socket
+     var ws = new WebSocket("ws://localhost:8080/ping");
+     var st;
+     function ping() {
+    	 st = new Date();
+    	 ws.send("ping");
+     }
+     ws.onopen = function ()
+     {
+    	 alert("open")
+         // Web Socket is connected, send data using send()
+    	 setInterval(function(){ws.send("ping")}, 3000);
+     };
+     ws.onmessage = function (evt) 
+     { 
+    	 var et = new Date()
+         var received_msg = evt.data;
+         document.getElementById("pongText").innerHTML = received_msg + ' in ' + (et.getTime() - st.getTime()) + ' ms';
+     };
+     ws.onclose = function ()
+     { 
+        // websocket is closed.
+        
+     };
+  }
+  else
+  {
+     // The browser doesn't support WebSocket
+     alert("WebSocket NOT supported by your Browser!");
+  }
+}
+</script>
+</head>
+<body>
+<div id="sse">
+   <a href="javascript:pingClient()">Run WebSocket</a>
+</div>
+<div id="pongText"></div>
+</body>
+</html>
